@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WRONGTASTE</title>
+    <style>
+      @keyframes shadow-in {
+        0% { height: 150%; width: 150%; }
+        90% { background-color: transparent; }
+        100% { background-color: rgba(0, 0, 0, 0.1); height: 100%; width: 100%; }
+      }
+
+      @keyframes shadow-out {
+        0% { background-color: rgba(0, 0, 0, 0.1); height: 100%; width: 100%; }
+        10% { background-color: transparent; }
+        100% { height: 150%; width: 150%; }
+      }
+
+      @keyframes slide-in {
+        from { left: calc(var(--slide-pos-x) * 1%); top: calc(var(--slide-pos-y) * 1%); }
+        to { left: 0; top: 0; }
+      }
+
+      @keyframes slide-out {
+        from { left: 0; top: 0; }
+        to { left: calc(var(--slide-pos-x) * 1%); top: calc(var(--slide-pos-y) * 1%); }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body, html {
+        width: 100%;
+        height: 100%;
+      }
+
+      body,
+      .heading {
+        display: grid;
+        column-gap: 2px;
+        row-gap: 2px;
+      }
+
+      body {
+        font-family: sans-serif;
+        grid-template:  1fr max-content max-content 1fr / 1fr max-content 1fr;
+      }
+
+      .heading {
+        font-size: 1em;
+        font-weight: normal;
+        grid-column: 2;
+        grid-template: 2em / repeat(14, 2em);
+        margin: 0;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      h1.heading {
+        grid-row: 2;
+      }
+
+      h2.heading {
+        grid-row: 3;
+      }
+
+      .heading-part {
+        display: block;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .heading-part-shadow,
+      .heading-part-slide,
+      .heading-part-text {
+        display: block;
+        position: absolute;
+      }
+
+      .heading-part-shadow {
+        animation-duration: calc(var(--shadow-duration) * 1ms);
+        animation-fill-mode: forwards;
+        animation-timing-function: linear;
+        box-shadow: #000 1px 1px 3px inset;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        z-index: 3;
+      }
+
+      .heading-part-slide {
+        --slide-pos-x: 0;
+        --slide-pos-y: -100;
+        animation-duration: calc(var(--slide-duration) * 1ms);
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+        height: 100%;
+        left: 0;
+        top: -100%;
+        width: 100%;
+        z-index: 2;
+      }
+
+      .heading-part-text {
+        height: 100%;
+        line-height: 2em;
+        width: 100%;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="heading">
+      <span class="heading-part-text" data-char="&#x30ed;">W</span>
+      <span class="heading-part-text" data-char="&#x30f3;">R</span>
+      <span class="heading-part-text" data-char="&#x30b0;">O</span>
+      <span class="heading-part-text" data-char="&#x30c6;">N</span>
+      <span class="heading-part-text" data-char="&#x30a4;">G</span>
+      <span class="heading-part-text" data-char="&#x30b9;">T</span>
+      <span class="heading-part-text" data-char="&#x30c8;">A</span>
+      <span class="heading-part-text" data-char="">S</span>
+      <span class="heading-part-text" data-char="">T</span>
+      <span class="heading-part-text" data-char="">E</span>
+    </h1>
+    <h2 class="heading">
+      <span class="heading-part-text" data-char="">E</span>
+      <span class="heading-part-text" data-char="">v</span>
+      <span class="heading-part-text" data-char="">a</span>
+      <span class="heading-part-text" data-char="">n</span>
+      <span class="heading-part-text" data-char="&#x30c7;"></span>
+      <span class="heading-part-text" data-char="&#x30b0;">d</span>
+      <span class="heading-part-text" data-char="&#x30e9;">e</span>
+      <span class="heading-part-text" data-char="&#x30fc;"></span>
+      <span class="heading-part-text" data-char="&#x30d5;">G</span>
+      <span class="heading-part-text" data-char="&#x30fb;">r</span>
+      <span class="heading-part-text" data-char="&#x30a8;">a</span>
+      <span class="heading-part-text" data-char="&#x30f4;">a</span>
+      <span class="heading-part-text" data-char="&#x30a1;">f</span>
+      <span class="heading-part-text" data-char="&#x30f3;">f</span>
+    </h2>
+    <script>
+      const colors = ['#0074D9', '#7FDBFF', '#39CCCC', '#3D9970', '#2ECC40', '#01FF70', '#FFDC00', '#FF851B', '#FF4136', '#85144b', '#F012BE', '#B10DC9'];
+      const shadowDuration = 1000;
+      const slideDuration = 500;
+      var changedHeadingPartsCount = 0;
+      var colorsIndex = 0;
+      var headingParts = [];
+      var prevColorsIndex = 0;
+
+      function changeHeadingParts() {
+        var headingPartsIndex = 0;
+        var changeHeadingPartsIV = setInterval(function () {
+          startChangeHeadingPart(headingParts[headingPartsIndex]);
+          headingPartsIndex++;
+
+          if (headingPartsIndex === headingParts.length) {
+            clearInterval(changeHeadingPartsIV);
+          }
+        }, 200);
+      }
+
+      function createSpanElement(className) {
+        let spanElement = document.createElement('span');
+        spanElement.className = className;
+
+        return spanElement;
+      }
+
+      function finishChangeHeadingPart(headingPartShadow) {
+        headingPartShadow.style.animationName = 'shadow-out';
+
+        setTimeout(function () {
+          changedHeadingPartsCount++;
+          if (headingParts.length === changedHeadingPartsCount) {
+            reset();
+          }
+        }, shadowDuration);
+      }
+
+      function headingPartSlideIn(headingPartShadow, headingPartSlide, headingPartText, repeat) {
+        setRandomSlidePos(headingPartSlide);
+        headingPartSlide.style.backgroundColor = repeat ? colors[prevColorsIndex] : colors[colorsIndex];
+        headingPartSlide.style.animationName = 'slide-in';
+
+        setTimeout(function () {
+          headingPartText.style.visibility = repeat ? 'hidden' : 'visible';
+
+          if (false === repeat) {
+            toggleHeadingPartText(headingPartText);
+          }
+
+          headingPartSlideOut(headingPartShadow, headingPartSlide, headingPartText, repeat);
+        }, slideDuration);
+      }
+
+      function headingPartSlideOut(headingPartShadow, headingPartSlide, headingPartText, repeat) {
+        setOppositeSlidePos(headingPartSlide);
+        headingPartSlide.style.animationName = 'slide-out';
+
+        setTimeout(function () {
+          if (true === repeat) {
+            headingPartSlideIn(headingPartShadow, headingPartSlide, headingPartText, false);
+          } else {
+            finishChangeHeadingPart(headingPartShadow);
+          }
+        }, slideDuration);
+      }
+
+      function init() {
+        let documentRoot = document.querySelector(':root');
+        documentRoot.style.setProperty('--shadow-duration', shadowDuration);
+        documentRoot.style.setProperty('--slide-duration', slideDuration);
+
+        let headingPartTexts = document.getElementsByClassName('heading-part-text');
+        let headingPartsCounter = headingPartTexts.length;
+
+        for (let headingPartText of headingPartTexts) {
+          let headingPart = createSpanElement('heading-part');
+          headingPartText.parentNode.replaceChild(headingPart, headingPartText);
+          headingPart.appendChild(headingPartText);
+          headingPart.appendChild(createSpanElement('heading-part-shadow'));
+          headingPart.appendChild(createSpanElement('heading-part-slide'));
+
+          headingParts.push(headingPart);
+
+          headingPartsCounter--;
+          if (0 === headingPartsCounter) {
+            reset();
+          }
+        }
+      }
+
+      function reset() {
+        changedHeadingPartsCount = 0;
+
+        prevColorsIndex = colorsIndex;
+        do {
+          colorsIndex = Math.floor(Math.random() * colors.length);
+        } while (colorsIndex === prevColorsIndex);
+
+        headingParts.sort(function () {
+          return 0.5 - Math.random();
+        });
+
+        setTimeout(changeHeadingParts, 2000);
+      }
+
+      function setOppositeSlidePos(headingPartSlide) {
+        for (slidePos of ['--slide-pos-x', '--slide-pos-y']) {
+          let value = headingPartSlide.style.getPropertyValue(slidePos);
+
+          if (0 !== value) {
+            headingPartSlide.style.setProperty(slidePos, value * -1);
+          }
+        }
+      }
+
+      function setRandomSlidePos(headingPartSlide) {
+        let slidePos = [0, -100, 100];
+        let slideX = slidePos.splice(Math.floor(Math.random() * slidePos.length), 1);
+        headingPartSlide.style.setProperty('--slide-pos-x', slideX[0]);
+
+        if (0 === slideX) {
+          slidePos = slidePos.splice(Math.floor(Math.random() * slidePos.length), 1);
+        }
+
+        headingPartSlide.style.setProperty('--slide-pos-y', slidePos[0]);
+      }
+
+      function startChangeHeadingPart(headingPart) {
+        let headingPartShadow = headingPart.getElementsByClassName('heading-part-shadow')[0];
+        let headingPartSlide = headingPart.getElementsByClassName('heading-part-slide')[0];
+        let headingPartText = headingPart.getElementsByClassName('heading-part-text')[0];
+
+        headingPartShadow.style.animationName = 'shadow-in';
+
+        setTimeout(function () {
+          headingPartSlideIn(headingPartShadow, headingPartSlide, headingPartText, true);
+        }, shadowDuration);
+      }
+
+      function toggleHeadingPartText(headingPartText) {
+        let char = headingPartText.getAttribute('data-char');
+        headingPartText.setAttribute('data-char', headingPartText.innerHTML);
+        headingPartText.innerHTML = char;
+        headingPartText.style.color = colors[colorsIndex];
+      }
+
+      init();
+    </script>
+  </body>
+</html>
