@@ -6,106 +6,142 @@
     <title>WRONGTASTE</title>
     <style>
       @keyframes shadow-in {
-        0% { height: 150%; width: 150%; }
-        90% { background-color: transparent; }
-        100% { background-color: rgba(0, 0, 0, 0.1); height: 100%; width: 100%; }
+        from {
+          background-color: transparent;
+          height: 150%;
+          width: 150%;
+        }
+        to {
+          background-color: rgba(0, 0, 0, 0.1);
+          height: 100%;
+          width: 100%;
+        }
       }
 
       @keyframes shadow-out {
-        0% { background-color: rgba(0, 0, 0, 0.1); height: 100%; width: 100%; }
-        10% { background-color: transparent; }
-        100% { height: 150%; width: 150%; }
+        from {
+          background-color: rgba(0, 0, 0, 0.1);
+          height: 100%;
+          width: 100%;
+        }
+        to {
+          background-color: transparent;
+          height: 150%;
+          width: 150%;
+        }
       }
 
       @keyframes slide-in {
-        from { left: calc(var(--slide-pos-x) * 1%); top: calc(var(--slide-pos-y) * 1%); }
-        to { left: 0; top: 0; }
+        from {
+          left: calc(var(--slide-pos-x) * 1%);
+          top: calc(var(--slide-pos-y) * 1%);
+        }
+        to {
+          left: 0;
+          top: 0;
+        }
       }
 
       @keyframes slide-out {
-        from { left: 0; top: 0; }
-        to { left: calc(var(--slide-pos-x) * 1%); top: calc(var(--slide-pos-y) * 1%); }
+        from {
+          left: 0;
+          top: 0;
+        }
+        to {
+          left: calc(var(--slide-pos-x) * -1%);
+          top: calc(var(--slide-pos-y) * -1%);
+        }
       }
 
       * {
+        border: none;
         box-sizing: border-box;
+        font-family: sans-serif;
+        font-size: 1em;
+        font-weight: normal;
+        margin: 0;
+        outline: 0;
+        padding: 0;
       }
 
       body, html {
-        width: 100%;
         height: 100%;
+        width: 100%;
       }
 
       body,
-      .heading {
+      .heading,
+      .mask {
+        column-gap: 1em;
         display: grid;
-        column-gap: 2px;
-        row-gap: 2px;
+        row-gap: 1em;
       }
 
       body {
-        font-family: sans-serif;
-        grid-template:  1fr max-content max-content 1fr / 1fr max-content 1fr;
+        display: grid;
+        grid-template: 1fr max-content max-content 1fr / 1fr max-content 1fr;
+      }
+
+      .heading,
+      .mask {
+        grid-column: 2;
+        grid-template-columns: repeat(5, 2em);
       }
 
       .heading {
-        font-size: 1em;
-        font-weight: normal;
-        grid-column: 2;
-        grid-template: 2em / repeat(14, 2em);
-        margin: 0;
-        text-align: center;
-        text-transform: uppercase;
+        z-index: 1
       }
 
       h1.heading {
         grid-row: 2;
+        grid-template-rows: repeat(2, 2em);
       }
 
       h2.heading {
         grid-row: 3;
+        grid-template-rows: repeat(3, 2em);
       }
 
       .heading-part {
         display: block;
+        line-height: 2em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .mask {
+        grid-row: 2 / 4;
+        grid-template-rows: repeat(5, 2em);
+        z-index: 2;
+      }
+
+      .mask-part {
         overflow: hidden;
         position: relative;
       }
 
-      .heading-part-shadow,
-      .heading-part-slide,
-      .heading-part-text {
-        display: block;
-        position: absolute;
-      }
-
-      .heading-part-shadow {
+      .shadow-part {
         animation-duration: calc(var(--shadow-duration) * 1ms);
         animation-fill-mode: forwards;
-        animation-timing-function: linear;
-        box-shadow: #000 1px 1px 3px inset;
+        animation-timing-function: ease-in-out;
+        box-shadow: #000 1px 2px 4px inset;
+        height: 150%;
         left: 50%;
+        position: absolute;
         top: 50%;
         transform: translate(-50%,-50%);
-        z-index: 3;
+        width: 150%;
+        z-index: 2;
       }
 
-      .heading-part-slide {
-        --slide-pos-x: 0;
-        --slide-pos-y: -100;
+      .slide-part {
         animation-duration: calc(var(--slide-duration) * 1ms);
         animation-fill-mode: forwards;
         animation-timing-function: ease-in-out;
         height: 100%;
         left: 0;
-        top: -100%;
-        width: 100%;
-        z-index: 2;
-      }
-
-      .heading-part-text {
-        height: 100%;
-        line-height: 2em;
+        position: absolute;
+        top: 0;
         width: 100%;
         z-index: 1;
       }
@@ -113,99 +149,61 @@
   </head>
   <body>
     <h1 class="heading">
-      <span class="heading-part-text" data-char="&#x30ed;">W</span>
-      <span class="heading-part-text" data-char="&#x30f3;">R</span>
-      <span class="heading-part-text" data-char="&#x30b0;">O</span>
-      <span class="heading-part-text" data-char="&#x30c6;">N</span>
-      <span class="heading-part-text" data-char="&#x30a4;">G</span>
-      <span class="heading-part-text" data-char="&#x30b9;">T</span>
-      <span class="heading-part-text" data-char="&#x30c8;">A</span>
-      <span class="heading-part-text" data-char="">S</span>
-      <span class="heading-part-text" data-char="">T</span>
-      <span class="heading-part-text" data-char="">E</span>
+      <span class="heading-part" data-char="&#x30ed;">W</span>
+      <span class="heading-part" data-char="&#x30f3;">R</span>
+      <span class="heading-part" data-char="&#x30b0;">O</span>
+      <span class="heading-part" data-char="&#x30c6;">N</span>
+      <span class="heading-part" data-char="&#x30a4;">G</span>
+      <span class="heading-part" data-char="&#x30b9;">T</span>
+      <span class="heading-part" data-char="&#x30c8;">A</span>
+      <span class="heading-part" data-char="">S</span>
+      <span class="heading-part" data-char="">T</span>
+      <span class="heading-part" data-char="">E</span>
     </h1>
     <h2 class="heading">
-      <span class="heading-part-text" data-char="">E</span>
-      <span class="heading-part-text" data-char="">v</span>
-      <span class="heading-part-text" data-char="">a</span>
-      <span class="heading-part-text" data-char="">n</span>
-      <span class="heading-part-text" data-char="&#x30c7;"></span>
-      <span class="heading-part-text" data-char="&#x30b0;">d</span>
-      <span class="heading-part-text" data-char="&#x30e9;">e</span>
-      <span class="heading-part-text" data-char="&#x30fc;"></span>
-      <span class="heading-part-text" data-char="&#x30d5;">G</span>
-      <span class="heading-part-text" data-char="&#x30fb;">r</span>
-      <span class="heading-part-text" data-char="&#x30a8;">a</span>
-      <span class="heading-part-text" data-char="&#x30f4;">a</span>
-      <span class="heading-part-text" data-char="&#x30a1;">f</span>
-      <span class="heading-part-text" data-char="&#x30f3;">f</span>
+      <span class="heading-part" data-char=""></span>
+      <span class="heading-part" data-char="">E</span>
+      <span class="heading-part" data-char="">v</span>
+      <span class="heading-part" data-char="">a</span>
+      <span class="heading-part" data-char="">n</span>
+      <span class="heading-part" data-char="&#x30c7;"></span>
+      <span class="heading-part" data-char="&#x30b0;">d</span>
+      <span class="heading-part" data-char="&#x30e9;">e</span>
+      <span class="heading-part" data-char="&#x30fc;"></span>
+      <span class="heading-part" data-char="&#x30d5;">G</span>
+      <span class="heading-part" data-char="&#x30fb;">r</span>
+      <span class="heading-part" data-char="&#x30a8;">a</span>
+      <span class="heading-part" data-char="&#x30f4;">a</span>
+      <span class="heading-part" data-char="&#x30a1;">f</span>
+      <span class="heading-part" data-char="&#x30f3;">f</span>
     </h2>
     <script>
-      const colors = ['#0074D9', '#7FDBFF', '#39CCCC', '#3D9970', '#2ECC40', '#01FF70', '#FFDC00', '#FF851B', '#FF4136', '#85144b', '#F012BE', '#B10DC9'];
-      const shadowDuration = 1000;
+      const colors = ['#FFDC00', '#0074D9', '#7FDBFF', '#39CCCC', '#2ECC40', '#01FF70', '#FF851B', '#FF4136', '#F012BE', '#B10DC9'];
+      const shadowDuration = 750;
       const slideDuration = 500;
-      var changedHeadingPartsCount = 0;
-      var colorsIndex = 0;
       var headingParts = [];
-      var prevColorsIndex = 0;
+      var shadowParts = [];
+      var slideParts = [];
 
-      function changeHeadingParts() {
-        var headingPartsIndex = 0;
-        var changeHeadingPartsIV = setInterval(function () {
-          startChangeHeadingPart(headingParts[headingPartsIndex]);
-          headingPartsIndex++;
-
-          if (headingPartsIndex === headingParts.length) {
-            clearInterval(changeHeadingPartsIV);
-          }
-        }, 200);
-      }
-
-      function createSpanElement(className) {
-        let spanElement = document.createElement('span');
+      function createDivElement(className) {
+        let spanElement = document.createElement('div');
         spanElement.className = className;
 
         return spanElement;
       }
 
-      function finishChangeHeadingPart(headingPartShadow) {
-        headingPartShadow.style.animationName = 'shadow-out';
+      function finishPart(partsIndexes, partsIndex, colorsIndex) {
+        shadowParts[partsIndex].style.animationName = 'shadow-out';
 
-        setTimeout(function () {
-          changedHeadingPartsCount++;
-          if (headingParts.length === changedHeadingPartsCount) {
-            reset();
-          }
-        }, shadowDuration);
+        if (partsIndexes[partsIndexes.length - 1] === partsIndex) {
+          setTimeout(function () {
+            start(partsIndexes, colorsIndex);
+          }, shadowDuration);
+        }
       }
 
-      function headingPartSlideIn(headingPartShadow, headingPartSlide, headingPartText, repeat) {
-        setRandomSlidePos(headingPartSlide);
-        headingPartSlide.style.backgroundColor = repeat ? colors[prevColorsIndex] : colors[colorsIndex];
-        headingPartSlide.style.animationName = 'slide-in';
-
-        setTimeout(function () {
-          headingPartText.style.visibility = repeat ? 'hidden' : 'visible';
-
-          if (false === repeat) {
-            toggleHeadingPartText(headingPartText);
-          }
-
-          headingPartSlideOut(headingPartShadow, headingPartSlide, headingPartText, repeat);
-        }, slideDuration);
-      }
-
-      function headingPartSlideOut(headingPartShadow, headingPartSlide, headingPartText, repeat) {
-        setOppositeSlidePos(headingPartSlide);
-        headingPartSlide.style.animationName = 'slide-out';
-
-        setTimeout(function () {
-          if (true === repeat) {
-            headingPartSlideIn(headingPartShadow, headingPartSlide, headingPartText, false);
-          } else {
-            finishChangeHeadingPart(headingPartShadow);
-          }
-        }, slideDuration);
+      function getRandomNumber(ceiling) {
+        return Math.floor(Math.random() * ceiling);
       }
 
       function init() {
@@ -213,79 +211,112 @@
         documentRoot.style.setProperty('--shadow-duration', shadowDuration);
         documentRoot.style.setProperty('--slide-duration', slideDuration);
 
-        let headingPartTexts = document.getElementsByClassName('heading-part-text');
-        let headingPartsCounter = headingPartTexts.length;
+        headingParts = document.getElementsByClassName('heading-part');
+        let mask = createDivElement('mask');
+        let headingPartsCounter = headingParts.length;
 
-        for (let headingPartText of headingPartTexts) {
-          let headingPart = createSpanElement('heading-part');
-          headingPartText.parentNode.replaceChild(headingPart, headingPartText);
-          headingPart.appendChild(headingPartText);
-          headingPart.appendChild(createSpanElement('heading-part-shadow'));
-          headingPart.appendChild(createSpanElement('heading-part-slide'));
+        for (let headingPart of headingParts) {
+          let shadowPart = createDivElement('shadow-part');
+          let slidePart = createDivElement('slide-part');
+          let maskPart = createDivElement('mask-part');
+          maskPart.appendChild(shadowPart);
+          maskPart.appendChild(slidePart);
+          mask.appendChild(maskPart);
 
-          headingParts.push(headingPart);
+          shadowParts.push(shadowPart);
+          slideParts.push(slidePart);
 
-          headingPartsCounter--;
-          if (0 === headingPartsCounter) {
-            reset();
+          if (0 === --headingPartsCounter) {
+            document.querySelector('body').appendChild(mask);
+
+            let partsIndexes = [...Array(headingParts.length).keys()];
+            start(partsIndexes, getRandomNumber(colors.length));
           }
         }
       }
 
-      function reset() {
-        changedHeadingPartsCount = 0;
+      function setRandomSlidePos(slidePart) {
+        let slidePosX = getRandomNumber(3) * 100 - 100;
+        let slidePosY = 0 === slidePosX ? getRandomNumber(2) * 200 - 100 : 0;
 
-        prevColorsIndex = colorsIndex;
-        do {
-          colorsIndex = Math.floor(Math.random() * colors.length);
-        } while (colorsIndex === prevColorsIndex);
+        slidePart.style.setProperty('--slide-pos-x', slidePosX);
+        slidePart.style.setProperty('--slide-pos-y', slidePosY);
+      }
 
-        headingParts.sort(function () {
+      function shuffleArray(array) {
+        array.sort(function () {
           return 0.5 - Math.random();
         });
-
-        setTimeout(changeHeadingParts, 2000);
       }
 
-      function setOppositeSlidePos(headingPartSlide) {
-        for (slidePos of ['--slide-pos-x', '--slide-pos-y']) {
-          let value = headingPartSlide.style.getPropertyValue(slidePos);
+      function slideIn(partsIndexes, partsIndex, colorsIndex, prevColorsIndex, slideCount, isFirstSlide) {
+        let slideColorsIndex = null;
 
-          if (0 !== value) {
-            headingPartSlide.style.setProperty(slidePos, value * -1);
-          }
-        }
-      }
-
-      function setRandomSlidePos(headingPartSlide) {
-        let slidePos = [0, -100, 100];
-        let slideX = slidePos.splice(Math.floor(Math.random() * slidePos.length), 1);
-        headingPartSlide.style.setProperty('--slide-pos-x', slideX[0]);
-
-        if (0 === slideX) {
-          slidePos = slidePos.splice(Math.floor(Math.random() * slidePos.length), 1);
+        if (true === isFirstSlide || 0 === slideCount) {
+          slideColorsIndex = isFirstSlide ? prevColorsIndex : colorsIndex;
+        } else {
+          slideColorsIndex = getRandomNumber(colors.length);
         }
 
-        headingPartSlide.style.setProperty('--slide-pos-y', slidePos[0]);
-      }
-
-      function startChangeHeadingPart(headingPart) {
-        let headingPartShadow = headingPart.getElementsByClassName('heading-part-shadow')[0];
-        let headingPartSlide = headingPart.getElementsByClassName('heading-part-slide')[0];
-        let headingPartText = headingPart.getElementsByClassName('heading-part-text')[0];
-
-        headingPartShadow.style.animationName = 'shadow-in';
+        setRandomSlidePos(slideParts[partsIndex]);
+        slideParts[partsIndex].style.animationName = 'slide-in';
+        slideParts[partsIndex].style.backgroundColor = colors[slideColorsIndex];
 
         setTimeout(function () {
-          headingPartSlideIn(headingPartShadow, headingPartSlide, headingPartText, true);
+          if (true === isFirstSlide) {
+            headingParts[partsIndex].style.visibility = 'hidden';
+          } else if (0 === slideCount) {
+            toggleHeadingPart(headingParts[partsIndex]);
+            headingParts[partsIndex].style.color = colors[colorsIndex];
+            headingParts[partsIndex].style.visibility = 'visible';
+          }
+
+          slideOut(partsIndexes, partsIndex, colorsIndex, prevColorsIndex, slideCount);
+        }, slideDuration);
+      }
+
+      function slideOut(partsIndexes, partsIndex, colorsIndex, prevColorsIndex, slideCount) {
+        slideParts[partsIndex].style.animationName = 'slide-out';
+
+        setTimeout(function () {
+          if (0 === slideCount) {
+            finishPart(partsIndexes, partsIndex, colorsIndex);
+          } else {
+            slideIn(partsIndexes, partsIndex, colorsIndex, prevColorsIndex, --slideCount, false);
+          }
+        }, slideDuration);
+      }
+
+      function start(partsIndexes, prevColorsIndex) {
+        shuffleArray(partsIndexes);
+        colorsIndex = getRandomNumber(colors.length);
+
+        setTimeout(function () {
+          let partsCounter = 0;
+
+          let startIV = setInterval(function () {
+            startPart(partsIndexes, partsIndexes[partsCounter], colorsIndex, prevColorsIndex);
+
+            if (partsIndexes.length === ++partsCounter) {
+              clearInterval(startIV);
+            }
+          }, 250);
+        }, 3000);
+      }
+
+      function startPart(partsIndexes, partsIndex, colorsIndex, prevColorsIndex) {
+        shadowParts[partsIndex].style.animationName = 'shadow-in';
+
+        setTimeout(function () {
+          let slideCount = getRandomNumber(4) + 1;
+          slideIn(partsIndexes, partsIndex, colorsIndex, prevColorsIndex, slideCount, true);
         }, shadowDuration);
       }
 
-      function toggleHeadingPartText(headingPartText) {
-        let char = headingPartText.getAttribute('data-char');
-        headingPartText.setAttribute('data-char', headingPartText.innerHTML);
-        headingPartText.innerHTML = char;
-        headingPartText.style.color = colors[colorsIndex];
+      function toggleHeadingPart(headingPart) {
+        let char = headingPart.getAttribute('data-char');
+        headingPart.setAttribute('data-char', headingPart.innerHTML);
+        headingPart.innerHTML = char;
       }
 
       init();
